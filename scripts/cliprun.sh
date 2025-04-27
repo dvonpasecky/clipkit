@@ -1,7 +1,7 @@
 #!/bin/bash
 # Run the clipboard contents as a shell command, with confirmation
 
-VERSION="0.1.0"
+VERSION=$(cat "$(dirname "$0")/../VERSION" 2>/dev/null || echo "unknown")
 CLIPBOARD_FILE="$HOME/clipboard.txt"
 
 ## HELP START

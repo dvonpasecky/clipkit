@@ -1,7 +1,7 @@
 #!/bin/bash
 # Show aggregated help for all clipkit tools
 
-VERSION="0.1.0"
+VERSION=$(cat "$(dirname "$0")/../VERSION" 2>/dev/null || echo "unknown")
 
 ## HELP START
 # cliphelp - Show help for all clipkit tools
@@ -14,7 +14,12 @@ VERSION="0.1.0"
 ## HELP END
 
 show_help() {
-    sed -n '/^## HELP START/,/^## HELP END/ p' "$0" | sed 's/^#//'
+    sed -n '/^## HELP START/,/^## HELP END/ {
+        /^## HELP START/d
+        /^## HELP END/d
+        s/^#//
+        p
+    }' "$1"
 }
 
 show_version() {
@@ -22,7 +27,7 @@ show_version() {
 }
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    show_help
+    show_help "$0"
     exit 0
 fi
 
@@ -53,8 +58,14 @@ CLIPKIT_COMMANDS=$(compgen -c | grep -E '^clip[^ ]*$' | sort -u)
 for cmd in $CLIPKIT_COMMANDS; do
     SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
     if [[ -x "$SCRIPT_PATH" ]]; then
-        echo -e "${BOLD_YELLOW}# $cmd${RESET}"
-        sed -n '/^## HELP START/,/^## HELP END/ p' "$SCRIPT_PATH" | sed 's/^#//'
+        # Draw a header box
+        TITLE=" $cmd "
+        EDGE=$(printf '%*s' "${#TITLE}" '' | tr ' ' '=')
+        echo -e "${BOLD_YELLOW}${EDGE}${RESET}"
+        echo -e "${BOLD_YELLOW}${TITLE}${RESET}"
+        echo -e "${BOLD_YELLOW}${EDGE}${RESET}"
+        echo
+        show_help "$SCRIPT_PATH"
         echo
     fi
 done
