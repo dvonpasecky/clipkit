@@ -1,5 +1,4 @@
 #!/bin/bash
-# Show aggregated help for all clipkit tools
 
 VERSION="@VERSION@"
 
@@ -12,7 +11,6 @@ else
     RESET=""
 fi
 
-# Script name for help header
 SCRIPT_NAME="$(basename "$0")"
 
 ## HELP START
@@ -74,11 +72,18 @@ echo
 echo "Available commands and usage:"
 echo
 
-# Find all clip* commands dynamically
-CLIPKIT_COMMANDS=$(compgen -c | grep -E '^clip[^ ]*$' | sort -u)
+# Find all installed clip* commands
+CLIPKIT_COMMANDS=()
 
-# Loop over each command
-for cmd in $CLIPKIT_COMMANDS; do
+while IFS= read -r cmd; do
+    SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
+    if [[ -x "$SCRIPT_PATH" ]] && [[ "$(file --mime-type -b "$SCRIPT_PATH")" == text/* ]]; then
+        CLIPKIT_COMMANDS+=("$cmd")
+    fi
+done < <(compgen -c | grep -E '^clip[^ ]*$' | sort -u)
+
+# Display help for each clean script
+for cmd in "${CLIPKIT_COMMANDS[@]}"; do
     SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
     if [[ -x "$SCRIPT_PATH" ]]; then
         TITLE=" $cmd "
