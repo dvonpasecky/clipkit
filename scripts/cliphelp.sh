@@ -58,25 +58,20 @@ show_external_help() {
     }' "$script_path"
 }
 
+# Handle -h and --help immediately
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     show_help
     exit 0
 fi
 
+# Handle -v and --version immediately
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
     show_version
     exit 0
 fi
 
-# Header
-echo -e "${BOLD_YELLOW}${TOOLSET_NAME} (v${VERSION}) - Lightweight Clipboard Utility Suite${RESET}"
-echo
-echo "Available commands and usage:"
-echo
-
-# Find all installed clip* commands
+# Populate CLIPKIT_COMMANDS first
 CLIPKIT_COMMANDS=()
-
 while IFS= read -r cmd; do
     if [[ "$cmd" == "clipkit" ]]; then
         continue
@@ -87,20 +82,17 @@ while IFS= read -r cmd; do
     fi
 done < <(compgen -c | grep -E '^clip[a-z]+$' | sort -u)
 
-# Check if any commands were found
+# Check if any commands found
 if [[ ${#CLIPKIT_COMMANDS[@]} -eq 0 ]]; then
     echo -e "${BOLD_YELLOW}No clipkit commands found.${RESET}"
     exit 1
 fi
 
-# Sort commands
+# Sort commands alphabetically
 CLIPKIT_COMMANDS=($(printf '%s\n' "${CLIPKIT_COMMANDS[@]}" | sort))
 
+# Handle -l and --list AFTER discovery
 if [[ "$1" == "-l" || "$1" == "--list" ]]; then
-    if [[ ${#CLIPKIT_COMMANDS[@]} -eq 0 ]]; then
-        echo -e "${BOLD_YELLOW}No clipkit commands found.${RESET}"
-        exit 1
-    fi
     echo "Available clipkit commands:"
     for cmd in "${CLIPKIT_COMMANDS[@]}"; do
         echo "$cmd"
@@ -108,7 +100,13 @@ if [[ "$1" == "-l" || "$1" == "--list" ]]; then
     exit 0
 fi
 
-# Display help for each clean script
+# Only print header if not in list mode
+echo -e "${BOLD_YELLOW}${TOOLSET_NAME} (v${VERSION}) - Lightweight Clipboard Utility Suite${RESET}"
+echo
+echo "Available commands and usage:"
+echo
+
+# Display full help for each command
 for cmd in "${CLIPKIT_COMMANDS[@]}"; do
     SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
     if [[ -x "$SCRIPT_PATH" ]]; then
