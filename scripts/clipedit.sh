@@ -4,6 +4,15 @@
 VERSION=$(cat "$(dirname "$0")/../VERSION" 2>/dev/null || echo "unknown")
 CLIPBOARD_FILE="$HOME/clipboard.txt"
 
+# Colors if outputting to terminal
+if [[ -t 1 ]]; then
+    BOLD_YELLOW="\033[1;33m"
+    RESET="\033[0m"
+else
+    BOLD_YELLOW=""
+    RESET=""
+fi
+
 ## HELP START
 # clipedit - Edit clipboard contents
 #
@@ -15,11 +24,26 @@ CLIPBOARD_FILE="$HOME/clipboard.txt"
 ## HELP END
 
 show_help() {
-    sed -n '/^## HELP START/,/^## HELP END/ p' "$0" | sed 's/^#//'
+    TITLE=" $SCRIPT_NAME "
+    EDGE=$(printf '%*s' "${#TITLE}" '' | tr ' ' '=')
+
+    echo -e "${BOLD_YELLOW}${EDGE}${RESET}"
+    echo -e "${BOLD_YELLOW}${TITLE}${RESET}"
+    echo -e "${BOLD_YELLOW}${EDGE}${RESET}"
+    echo
+
+    sed -n '/^## HELP START/,/^## HELP END/ {
+        /^## HELP START/d
+        /^## HELP END/d
+        s/^#//
+        p
+    }' "$0"
+
+    echo
 }
 
 show_version() {
-    echo "clipedit version $VERSION"
+    echo "$SCRIPT_NAME version $VERSION"
 }
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
