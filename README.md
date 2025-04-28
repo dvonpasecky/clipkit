@@ -119,6 +119,12 @@ Get help for any clipkit tool:
 clipcopy --help
 ```
 
+## Additional clipkit Options
+
+- `clipkit -h` or `clipkit --help`: Display help for clipkit.
+- `clipkit -l` or `clipkit --list`: Lists all available clipkit commands without displaying help.
+- `clipkit -v` or `clipkit --version`: Show clipkit version.
+
 ---
 
 ## Philosophy

@@ -78,11 +78,35 @@ echo
 CLIPKIT_COMMANDS=()
 
 while IFS= read -r cmd; do
+    if [[ "$cmd" == "clipkit" ]]; then
+        continue
+    fi
     SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
     if [[ -x "$SCRIPT_PATH" ]]; then
         CLIPKIT_COMMANDS+=("$cmd")
     fi
-done < <(compgen -c | grep -E '^clip[^ ]*$' | sort -u)
+done < <(compgen -c | grep -E '^clip[a-z]+$' | sort -u)
+
+# Check if any commands were found
+if [[ ${#CLIPKIT_COMMANDS[@]} -eq 0 ]]; then
+    echo -e "${BOLD_YELLOW}No clipkit commands found.${RESET}"
+    exit 1
+fi
+
+# Sort commands
+CLIPKIT_COMMANDS=($(printf '%s\n' "${CLIPKIT_COMMANDS[@]}" | sort))
+
+if [[ "$1" == "-l" || "$1" == "--list" ]]; then
+    if [[ ${#CLIPKIT_COMMANDS[@]} -eq 0 ]]; then
+        echo -e "${BOLD_YELLOW}No clipkit commands found.${RESET}"
+        exit 1
+    fi
+    echo "Available clipkit commands:"
+    for cmd in "${CLIPKIT_COMMANDS[@]}"; do
+        echo "$cmd"
+    done
+    exit 0
+fi
 
 # Display help for each clean script
 for cmd in "${CLIPKIT_COMMANDS[@]}"; do
