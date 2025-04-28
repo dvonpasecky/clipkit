@@ -69,7 +69,7 @@ if [[ "$1" == "-v" || "$1" == "--version" ]]; then
 fi
 
 # Header
-echo -e "${BOLD_YELLOW}${TOOLSET_NAME} - Lightweight Clipboard Utility Suite${RESET}"
+echo -e "${BOLD_YELLOW}${TOOLSET_NAME} (v${VERSION}) - Lightweight Clipboard Utility Suite${RESET}"
 echo
 echo "Available commands and usage:"
 echo
@@ -79,7 +79,7 @@ CLIPKIT_COMMANDS=()
 
 while IFS= read -r cmd; do
     SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
-    if [[ -x "$SCRIPT_PATH" ]] && [[ "$(file --mime-type -b "$SCRIPT_PATH")" == text/* ]]; then
+    if [[ -x "$SCRIPT_PATH" ]]; then
         CLIPKIT_COMMANDS+=("$cmd")
     fi
 done < <(compgen -c | grep -E '^clip[^ ]*$' | sort -u)
