@@ -1,7 +1,7 @@
 #!/bin/bash
 # Save text to the clipboard file, from arguments or stdin
 
-VERSION=$(cat "$(dirname "$0")/../VERSION" 2>/dev/null || echo "unknown")
+VERSION="@VERSION@"
 CLIPBOARD_FILE="$HOME/clipboard.txt"
 
 # Colors if outputting to terminal

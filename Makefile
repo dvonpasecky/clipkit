@@ -4,7 +4,8 @@ SCRIPTS := clipcopy clipappend clippaste cliprun clipclear clipedit cliphelp
 install:
 	mkdir -p $(INSTALL_DIR)
 	for script in $(SCRIPTS); do \
-	    install -m 755 scripts/$$script.sh $(INSTALL_DIR)/$$script; \
+	    sed "s/@VERSION@/$(VERSION)/g" scripts/$$script.sh > $(INSTALL_DIR)/$$script; \
+	    chmod +x $(INSTALL_DIR)/$$script; \
 	done
 	@echo "Installed clipkit scripts to $(INSTALL_DIR)"
 

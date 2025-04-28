@@ -1,7 +1,7 @@
 #!/bin/bash
 # Print the contents of the clipboard file
 
-VERSION=$(cat "$(dirname "$0")/../VERSION" 2>/dev/null || echo "unknown")
+VERSION="@VERSION@"
 CLIPBOARD_FILE="$HOME/clipboard.txt"
 
 # Colors if outputting to terminal
@@ -12,6 +12,9 @@ else
     BOLD_YELLOW=""
     RESET=""
 fi
+
+# Script name for help header
+SCRIPT_NAME="$(basename "$0")"
 
 ## HELP START
 # clippaste - Show clipboard contents
