@@ -48,6 +48,16 @@ show_version() {
     echo "$SCRIPT_NAME version $VERSION"
 }
 
+show_external_help() {
+    local script_path="$1"
+    sed -n '/^## HELP START/,/^## HELP END/ {
+        /^## HELP START/d
+        /^## HELP END/d
+        s/^#//
+        p
+    }' "$script_path"
+}
+
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     show_help
     exit 0
@@ -71,14 +81,13 @@ CLIPKIT_COMMANDS=$(compgen -c | grep -E '^clip[^ ]*$' | sort -u)
 for cmd in $CLIPKIT_COMMANDS; do
     SCRIPT_PATH="$(command -v "$cmd" 2>/dev/null)"
     if [[ -x "$SCRIPT_PATH" ]]; then
-        # Draw a header box
         TITLE=" $cmd "
         EDGE=$(printf '%*s' "${#TITLE}" '' | tr ' ' '=')
         echo -e "${BOLD_YELLOW}${EDGE}${RESET}"
         echo -e "${BOLD_YELLOW}${TITLE}${RESET}"
         echo -e "${BOLD_YELLOW}${EDGE}${RESET}"
         echo
-        show_help "$SCRIPT_PATH"
+        show_external_help "$SCRIPT_PATH"
         echo
     fi
 done

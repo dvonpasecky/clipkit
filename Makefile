@@ -1,4 +1,5 @@
 INSTALL_DIR := $(HOME)/bin
+VERSION := $(shell cat VERSION)
 SCRIPTS := clipcopy clipappend clippaste cliprun clipclear clipedit cliphelp
 
 install:
@@ -8,6 +9,7 @@ install:
 	    chmod +x $(INSTALL_DIR)/$$script; \
 	done
 	@echo "Installed clipkit scripts to $(INSTALL_DIR)"
+
 
 uninstall:
 	for script in $(SCRIPTS); do \
