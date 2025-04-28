@@ -2,7 +2,7 @@
 # Save text to the clipboard file, from arguments or stdin
 
 VERSION="@VERSION@"
-CLIPBOARD_FILE="$HOME/clipboard.txt"
+CLIPBOARD_FILE="${CLIPBOARD_FILE:-$HOME/clipboard.txt}"  # Default unless overridden
 
 # Colors if outputting to terminal
 if [[ -t 1 ]]; then

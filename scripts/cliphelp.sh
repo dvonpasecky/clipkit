@@ -1,6 +1,8 @@
 #!/bin/bash
+# Show aggregated help for all clipkit tools
 
 VERSION="@VERSION@"
+TOOLSET_NAME="clipkit"
 
 # Colors if outputting to terminal
 if [[ -t 1 ]]; then
@@ -67,7 +69,7 @@ if [[ "$1" == "-v" || "$1" == "--version" ]]; then
 fi
 
 # Header
-echo -e "${BOLD_YELLOW}clipkit - Lightweight Clipboard Utility Suite${RESET}"
+echo -e "${BOLD_YELLOW}${TOOLSET_NAME} - Lightweight Clipboard Utility Suite${RESET}"
 echo
 echo "Available commands and usage:"
 echo
